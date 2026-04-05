@@ -2,6 +2,40 @@ import { useRef, useState } from 'react';
 import type { GameState, ItemType, CharacterProfile, CharacterPose } from '../types';
 import CharacterProfileModal from './CharacterProfileModal';
 
+// ── Warm palette (Stardew Valley × 古风水墨) ─────────────────────────────────
+const C = {
+  panelBg:     '#1c1309',
+  sectionBg:   '#231808',
+  border:      '#4e3418',
+  borderLight: '#362410',
+  textPri:     '#f0e0b8',
+  textSec:     '#a08858',
+  textMuted:   '#5a4028',
+  gold:        '#d4a030',
+  goldLight:   '#e8c060',
+  hoverBg:     '#3a2810',
+  activeBg:    '#402e12',
+  btnBg:       '#2e1e0c',
+  btnBorder:   '#5a3e1a',
+  btnHover:    '#4a2e10',
+  charAccent:  '#c0a878',
+  charBorder:  '#6a5030',
+  poseBorder:  '#c0a878',
+  success:     '#7a9040',
+  successBg:   '#1e2a0e',
+  successBdr:  '#3a5018',
+  danger:      '#bb4422',
+  dangerBg:    '#2a1008',
+  dangerBdr:   '#6a2010',
+  info:        '#8899aa',
+  infoBg:      '#0e1820',
+  infoBdr:     '#2a3848',
+  purpleBg:    '#1e1628',
+  purpleBdr:   '#4a3868',
+  purpleText:  '#c0a8d8',
+} as const;
+// ─────────────────────────────────────────────────────────────────────────────
+
 interface Props {
   state: GameState;
   onAddItem: (itemType: ItemType) => void;
@@ -30,16 +64,10 @@ function compressImage(
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       const ctx = canvas.getContext('2d')!;
-      if (format === 'jpeg') {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, w, h);
-      }
+      if (format === 'jpeg') { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); }
       ctx.drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
-      resolve(format === 'jpeg'
-        ? canvas.toDataURL('image/jpeg', quality)
-        : canvas.toDataURL('image/png'),
-      );
+      resolve(format === 'jpeg' ? canvas.toDataURL('image/jpeg', quality) : canvas.toDataURL('image/png'));
     };
     img.src = url;
   });
@@ -55,7 +83,6 @@ export default function AssetPanel({
   const charInputRef = useRef<HTMLInputElement>(null);
   const poseInputRef = useRef<HTMLInputElement>(null);
   const [poseTargetTypeId, setPoseTargetTypeId] = useState<string | null>(null);
-
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
@@ -63,92 +90,94 @@ export default function AssetPanel({
 
   const activeScene = state.scenes.find((s) => s.id === state.activeSceneId);
   const itemTypes = state.itemTypes.filter((t) => t.kind === 'image' && (t.category ?? 'item') === 'item');
-  const charTypes = state.itemTypes.filter((t) => t.kind === 'image' && t.category === 'character');
+  const charTypes = state.itemTypes.filter((t) => t.kind === 'image' && t.category === 'character' && !(t as ItemType & { _chapterHidden?: boolean })._chapterHidden);
 
   async function handleBgUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !activeScene) return;
-    const compressed = await compressImage(file, 1920, 'jpeg');
-    onUpdateSceneBackground(activeScene.id, compressed);
+    const file = e.target.files?.[0]; if (!file || !activeScene) return;
+    onUpdateSceneBackground(activeScene.id, await compressImage(file, 1920, 'jpeg'));
     e.target.value = '';
   }
-
   async function handleItemUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const compressed = await compressImage(file, 800, 'png');
-    const label = file.name.replace(/\.[^.]+$/, '').slice(0, 16) || '新物品';
-    onAddImageItem(label, compressed, 'item');
+    const file = e.target.files?.[0]; if (!file) return;
+    onAddImageItem(file.name.replace(/\.[^.]+$/, '').slice(0, 16) || '新物品', await compressImage(file, 800, 'png'), 'item');
     e.target.value = '';
   }
-
   async function handleCharUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const compressed = await compressImage(file, 800, 'png');
-    const label = file.name.replace(/\.[^.]+$/, '').slice(0, 16) || '新人物';
-    onAddImageItem(label, compressed, 'character');
+    const file = e.target.files?.[0]; if (!file) return;
+    onAddImageItem(file.name.replace(/\.[^.]+$/, '').slice(0, 16) || '新人物', await compressImage(file, 800, 'png'), 'character');
     e.target.value = '';
   }
-
   async function handlePoseUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !poseTargetTypeId) return;
-    const compressed = await compressImage(file, 800, 'png');
-    const poseName = file.name.replace(/\.[^.]+$/, '').slice(0, 12) || '新姿态';
+    const file = e.target.files?.[0]; if (!file || !poseTargetTypeId) return;
     const pose: CharacterPose = {
       id: `pose-${crypto.randomUUID()}`,
-      name: poseName,
-      imageUrl: compressed,
+      name: file.name.replace(/\.[^.]+$/, '').slice(0, 12) || '新姿态',
+      imageUrl: await compressImage(file, 800, 'png'),
     };
     onAddCharacterPose(poseTargetTypeId, pose);
-    setPoseTargetTypeId(null);
-    e.target.value = '';
+    setPoseTargetTypeId(null); e.target.value = '';
   }
 
   function startRename(typeId: string, currentLabel: string) {
-    setRenamingId(typeId);
-    setRenameValue(currentLabel);
+    setRenamingId(typeId); setRenameValue(currentLabel);
   }
-
   function commitRename(typeId: string) {
     const trimmed = renameValue.trim();
     if (trimmed) onRenameItemType(typeId, trimmed);
-    setRenamingId(null);
-    setExpandedId(null);
+    setRenamingId(null); setExpandedId(null);
   }
 
   function renderTypeList(types: ItemType[], addLabel: string, isCharacter = false) {
     return (
       <>
         {types.length === 0 && (
-          <div style={{ padding: '6px 10px 10px', fontSize: 11, color: '#444', lineHeight: 1.8 }}>
+          <div style={{ padding: '6px 4px 10px', fontSize: 11, color: C.textMuted, lineHeight: 1.8 }}>
             {addLabel}
           </div>
         )}
         {types.map((t) => {
           const expanded = expandedId === t.id;
           const renaming = renamingId === t.id;
+          const thumb = t.poses?.[0]?.imageUrl ?? t.imageUrl;
           return (
-            <div key={t.id} style={{ marginBottom: 2, borderRadius: 4, background: expanded ? '#1a1e2c' : 'transparent' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 4px' }}>
+            <div
+              key={t.id}
+              style={{
+                marginBottom: 3, borderRadius: 5,
+                background: expanded ? C.activeBg : 'transparent',
+                border: expanded ? `1px solid ${C.border}` : '1px solid transparent',
+                transition: 'background 0.15s',
+              }}
+            >
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 6px' }}
+                onMouseEnter={(e) => { if (!expanded) (e.currentTarget as HTMLDivElement).style.background = C.hoverBg; }}
+                onMouseLeave={(e) => { if (!expanded) (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+              >
+                {/* Thumbnail */}
                 <div
                   title="点击放入场景"
                   onClick={() => onAddItem(t)}
-                  style={{ flexShrink: 0, cursor: 'pointer' }}
+                  style={{
+                    flexShrink: 0, cursor: 'pointer',
+                    width: 36, height: 36, borderRadius: 4,
+                    border: `1.5px solid ${C.border}`,
+                    background: '#140e06', overflow: 'hidden',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'border-color 0.15s',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = C.gold; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = C.border; }}
                 >
-                  {t.imageUrl && (
-                    <img
-                      src={t.imageUrl} alt={t.label}
-                      style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 2, display: 'block' }}
-                    />
+                  {thumb && (
+                    <img src={thumb} alt={t.label}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
                   )}
                 </div>
 
                 {renaming ? (
                   <input
-                    autoFocus
-                    value={renameValue}
+                    autoFocus value={renameValue}
                     onChange={(e) => setRenameValue(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') commitRename(t.id);
@@ -156,14 +185,14 @@ export default function AssetPanel({
                     }}
                     onBlur={() => commitRename(t.id)}
                     style={{
-                      flex: 1, background: '#0e1218', color: '#e8e0c0',
-                      border: '1px solid #ffd84a', borderRadius: 3,
+                      flex: 1, background: '#140e06', color: C.textPri,
+                      border: `1px solid ${C.gold}`, borderRadius: 3,
                       padding: '2px 6px', fontSize: 12, outline: 'none', minWidth: 0,
                     }}
                   />
                 ) : (
                   <span style={{
-                    flex: 1, fontSize: 11, color: '#ccc',
+                    flex: 1, fontSize: 11, color: expanded ? C.textPri : C.textSec,
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                   }}>
                     {t.label}
@@ -176,9 +205,12 @@ export default function AssetPanel({
                     title="选项"
                     style={{
                       flexShrink: 0, background: 'none', border: 'none',
-                      color: expanded ? '#ffd84a' : '#446', cursor: 'pointer',
+                      color: expanded ? C.gold : C.textMuted, cursor: 'pointer',
                       fontSize: 16, lineHeight: 1, padding: '0 2px',
+                      transition: 'color 0.15s',
                     }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = C.goldLight; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = expanded ? C.gold : C.textMuted; }}
                   >
                     ⋯
                   </button>
@@ -187,40 +219,31 @@ export default function AssetPanel({
 
               {expanded && !renaming && (
                 <div style={{ padding: '0 8px 8px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <button
-                    onClick={() => { onAddItem(t); setExpandedId(null); }}
-                    style={{ ...actionBtn, color: '#66cc66', borderColor: '#336633', background: '#1a2a1a' }}
-                  >
+                  <button onClick={() => { onAddItem(t); setExpandedId(null); }}
+                    style={{ ...actionBtn, color: C.success, borderColor: C.successBdr, background: C.successBg }}>
                     + 放入当前场景
                   </button>
                   {isCharacter && (
-                    <button
-                      onClick={() => { setProfileTypeId(t.id); setExpandedId(null); }}
-                      style={{ ...actionBtn, color: '#d4c0f0', borderColor: '#5a3a8a', background: '#201a30' }}
-                    >
+                    <button onClick={() => { setProfileTypeId(t.id); setExpandedId(null); }}
+                      style={{ ...actionBtn, color: C.purpleText, borderColor: C.purpleBdr, background: C.purpleBg }}>
                       ✦ 编辑人设档案
                     </button>
                   )}
-                  <button
-                    onClick={() => startRename(t.id, t.label)}
-                    style={{ ...actionBtn, color: '#88aaff', borderColor: '#334488', background: '#1a1a2a' }}
-                  >
+                  <button onClick={() => startRename(t.id, t.label)}
+                    style={{ ...actionBtn, color: C.info, borderColor: C.infoBdr, background: C.infoBg }}>
                     ✎ 更改名称
                   </button>
-                  <button
-                    onClick={() => { onDeleteItemType(t.id); setExpandedId(null); }}
-                    style={{ ...actionBtn, color: '#ff6060', borderColor: '#662222', background: '#2a1a1a' }}
-                  >
+                  <button onClick={() => { onDeleteItemType(t.id); setExpandedId(null); }}
+                    style={{ ...actionBtn, color: C.danger, borderColor: C.dangerBdr, background: C.dangerBg }}>
                     ✕ 删除此素材
                   </button>
 
-                  {/* ── Pose switcher (characters only) ───────────────────── */}
+                  {/* Pose switcher */}
                   {isCharacter && t.poses && t.poses.length > 0 && (
                     <div style={{ marginTop: 4 }}>
-                      <div style={{ fontSize: 10, color: '#776688', marginBottom: 5 }}>姿态切换</div>
+                      <div style={{ fontSize: 10, color: C.textMuted, marginBottom: 5 }}>姿态切换</div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                         {t.poses.map((pose) => {
-                          // Find first active-scene item of this type to show active highlight
                           const sceneItems = state.items.filter(
                             (i) => i.itemTypeId === t.id && i.sceneId === state.activeSceneId && !i.trashed
                           );
@@ -230,19 +253,14 @@ export default function AssetPanel({
                           return (
                             <div key={pose.id} style={{ position: 'relative' }}>
                               <img
-                                src={pose.imageUrl}
-                                alt={pose.name}
-                                title={pose.name}
-                                onClick={() => {
-                                  sceneItems.forEach((i) => onSetItemPose(i.id, pose.id));
-                                }}
+                                src={pose.imageUrl} alt={pose.name} title={pose.name}
+                                onClick={() => { sceneItems.forEach((i) => onSetItemPose(i.id, pose.id)); }}
                                 style={{
                                   width: 34, height: 34, objectFit: 'contain',
-                                  borderRadius: 3, cursor: 'pointer',
-                                  background: '#0a0c12',
-                                  border: isActive ? '1.5px solid #b8a0e0' : '1px solid #2a2a3a',
-                                  boxSizing: 'border-box',
-                                  display: 'block',
+                                  borderRadius: 3, cursor: 'pointer', background: '#140e06',
+                                  border: isActive ? `1.5px solid ${C.poseBorder}` : `1px solid ${C.border}`,
+                                  boxSizing: 'border-box', display: 'block',
+                                  transition: 'border-color 0.15s',
                                 }}
                               />
                               {t.poses!.length > 1 && (
@@ -252,32 +270,35 @@ export default function AssetPanel({
                                   style={{
                                     position: 'absolute', top: -5, right: -5,
                                     width: 14, height: 14, borderRadius: '50%',
-                                    background: '#2a1010', border: '1px solid #882222',
-                                    color: '#ff6060', fontSize: 9, lineHeight: 1,
+                                    background: C.dangerBg, border: `1px solid ${C.dangerBdr}`,
+                                    color: C.danger, fontSize: 9, lineHeight: 1,
                                     cursor: 'pointer', padding: 0,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                   }}
-                                >
-                                  ×
-                                </button>
+                                >×</button>
                               )}
                             </div>
                           );
                         })}
-                        {/* Add pose button */}
                         <button
                           onClick={() => { setPoseTargetTypeId(t.id); poseInputRef.current?.click(); }}
                           title="添加姿态"
                           style={{
                             width: 34, height: 34, borderRadius: 3,
-                            background: '#12151e', border: '1px dashed #3a3a50',
-                            color: '#446', fontSize: 18, cursor: 'pointer',
+                            background: '#140e06', border: `1px dashed ${C.border}`,
+                            color: C.textMuted, fontSize: 18, cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0,
+                            flexShrink: 0, transition: 'border-color 0.15s, color 0.15s',
                           }}
-                        >
-                          +
-                        </button>
+                          onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLButtonElement).style.borderColor = C.gold;
+                            (e.currentTarget as HTMLButtonElement).style.color = C.gold;
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLButtonElement).style.borderColor = C.border;
+                            (e.currentTarget as HTMLButtonElement).style.color = C.textMuted;
+                          }}
+                        >+</button>
                       </div>
                     </div>
                   )}
@@ -294,74 +315,143 @@ export default function AssetPanel({
 
   return (
     <>
-    {profileType && (
-      <CharacterProfileModal
-        itemType={profileType}
-        onSave={(profile) => onUpdateCharacterProfile(profileType.id, profile)}
-        onClose={() => setProfileTypeId(null)}
-      />
-    )}
-    <div style={{
-      width: 200, flexShrink: 0, background: '#0e1016',
-      borderLeft: '2px solid #2a2a3a', display: 'flex',
-      flexDirection: 'column', height: '100%', overflowY: 'auto',
-    }}>
-      <div style={{ padding: '12px 10px', borderBottom: '1px solid #2a2a3a', fontSize: 13, fontWeight: 600, color: '#ffd84a' }}>
-        素材管理
-      </div>
+      {profileType && (
+        <CharacterProfileModal
+          itemType={profileType}
+          onSave={(profile) => onUpdateCharacterProfile(profileType.id, profile)}
+          onClose={() => setProfileTypeId(null)}
+        />
+      )}
+      <div style={{
+        width: 200, flexShrink: 0,
+        background: C.panelBg,
+        borderLeft: `2px solid ${C.border}`,
+        display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto',
+      }}>
+        {/* Panel header */}
+        <div style={{
+          padding: '13px 12px 11px',
+          borderBottom: `1px solid ${C.border}`,
+          background: `linear-gradient(to bottom, #281c0a, ${C.panelBg})`,
+        }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, letterSpacing: 1 }}>
+            素 材 管 理
+          </div>
+        </div>
 
-      {/* Scene background */}
-      <div style={{ padding: '12px 10px', borderBottom: '1px solid #1a1a2a' }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#ccc', marginBottom: 6 }}>更换场景背景</div>
-        <div style={{ fontSize: 11, color: '#666', marginBottom: 10 }}>当前：{activeScene?.name ?? '—'}</div>
-        <button onClick={() => bgInputRef.current?.click()} style={btnStyle}>上传背景图</button>
-        <input ref={bgInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleBgUpload} />
-        <div style={{ fontSize: 10, color: '#444', marginTop: 5 }}>超过 1920px 自动压缩</div>
-      </div>
+        {/* Scene background */}
+        <Section label="场景背景">
+          <div style={{ fontSize: 11, color: C.textMuted, marginBottom: 8 }}>
+            当前：{activeScene?.name ?? '—'}
+          </div>
+          <UploadBtn onClick={() => bgInputRef.current?.click()}>上传背景图</UploadBtn>
+          <input ref={bgInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleBgUpload} />
+          <div style={{ fontSize: 10, color: C.textMuted, marginTop: 5 }}>超过 1920px 自动压缩</div>
+        </Section>
 
-      {/* ── Characters ── */}
-      <div style={{ padding: '12px 10px', borderBottom: '1px solid #1a1a2a' }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#b8a0e0', marginBottom: 8 }}>
-          人物
-        </div>
-        <button onClick={() => charInputRef.current?.click()} style={{ ...btnStyle, borderColor: '#4a3a6a', color: '#b8a0e0' }}>
-          上传人物立绘
-        </button>
-        <input ref={charInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleCharUpload} />
-        <input ref={poseInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePoseUpload} />
-        <div style={{ fontSize: 10, color: '#444', marginTop: 5, marginBottom: charTypes.length ? 8 : 0 }}>
-          建议使用透明背景 PNG
-        </div>
-        {renderTypeList(charTypes, '上传人物立绘后可放入场景', true)}
-      </div>
+        {/* Characters */}
+        <Section label="人 物" accent={C.charAccent} borderColor={C.charBorder} last={false}>
+          <UploadBtn
+            onClick={() => charInputRef.current?.click()}
+            color={C.charAccent} borderColor={C.charBorder}
+          >
+            上传人物立绘
+          </UploadBtn>
+          <input ref={charInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleCharUpload} />
+          <input ref={poseInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePoseUpload} />
+          <div style={{ fontSize: 10, color: C.textMuted, marginTop: 5, marginBottom: charTypes.length ? 8 : 0 }}>
+            建议使用透明背景 PNG
+          </div>
+          {renderTypeList(charTypes, '上传人物立绘后可放入场景', true)}
+        </Section>
 
-      {/* ── Props / Items ── */}
-      <div style={{ padding: '12px 10px 0' }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#ccc', marginBottom: 8 }}>
-          道具
-        </div>
-        <button onClick={() => itemInputRef.current?.click()} style={btnStyle}>
-          上传道具图片
-        </button>
-        <input ref={itemInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleItemUpload} />
-        <div style={{ fontSize: 10, color: '#444', marginTop: 5, marginBottom: itemTypes.length ? 8 : 0 }}>
-          超过 800px 自动压缩
-        </div>
-        {renderTypeList(itemTypes, '上传图片后可放入场景')}
+        {/* Props / Items */}
+        <Section label="道 具" last>
+          <UploadBtn onClick={() => itemInputRef.current?.click()}>上传道具图片</UploadBtn>
+          <input ref={itemInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleItemUpload} />
+          <div style={{ fontSize: 10, color: C.textMuted, marginTop: 5, marginBottom: itemTypes.length ? 8 : 0 }}>
+            超过 800px 自动压缩
+          </div>
+          {renderTypeList(itemTypes, '上传图片后可放入场景')}
+        </Section>
       </div>
-    </div>
     </>
   );
 }
 
-const btnStyle: React.CSSProperties = {
-  width: '100%', background: '#1a2030', border: '1px solid #3a4060',
-  color: '#88aacc', cursor: 'pointer', fontSize: 12,
-  padding: '8px 0', borderRadius: 4,
-};
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function Section({
+  label, accent, borderColor, last, children,
+}: {
+  label: string;
+  accent?: string;
+  borderColor?: string;
+  last?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div style={{
+      padding: '11px 10px',
+      borderBottom: last ? 'none' : `1px solid #362410`,
+    }}>
+      <div style={{
+        fontSize: 11, fontWeight: 700, letterSpacing: 1.2,
+        color: accent ?? '#a08858',
+        marginBottom: 8,
+        paddingBottom: 5,
+        borderBottom: `1px solid ${borderColor ?? '#362410'}`,
+      }}>
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function UploadBtn({
+  onClick, color, borderColor, children,
+}: {
+  onClick: () => void;
+  color?: string;
+  borderColor?: string;
+  children: React.ReactNode;
+}) {
+  const base: React.CSSProperties = {
+    width: '100%', background: '#2e1e0c',
+    border: `1px solid ${borderColor ?? '#5a3e1a'}`,
+    color: color ?? '#a08858',
+    cursor: 'pointer', fontSize: 12,
+    padding: '7px 0', borderRadius: 5,
+    transition: 'background 0.15s, color 0.15s, border-color 0.15s',
+    letterSpacing: 0.3,
+  };
+  return (
+    <button
+      onClick={onClick}
+      style={base}
+      onMouseEnter={(e) => {
+        const b = e.currentTarget as HTMLButtonElement;
+        b.style.background = '#4a2e10';
+        b.style.color = color ? '#e8c060' : '#d4a030';
+        b.style.borderColor = '#d4a030';
+      }}
+      onMouseLeave={(e) => {
+        const b = e.currentTarget as HTMLButtonElement;
+        b.style.background = '#2e1e0c';
+        b.style.color = color ?? '#a08858';
+        b.style.borderColor = borderColor ?? '#5a3e1a';
+      }}
+    >
+      {children}
+    </button>
+  );
+}
 
 const actionBtn: React.CSSProperties = {
-  width: '100%', background: 'transparent', border: '1px solid #333',
-  color: '#aaa', cursor: 'pointer', fontSize: 11,
-  padding: '5px 8px', borderRadius: 3, textAlign: 'left',
+  width: '100%', background: 'transparent',
+  border: '1px solid #362410', color: '#a08858',
+  cursor: 'pointer', fontSize: 11,
+  padding: '5px 8px', borderRadius: 4, textAlign: 'left',
+  transition: 'background 0.12s, color 0.12s',
 };

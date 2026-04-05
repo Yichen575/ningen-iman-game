@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import localforage from 'localforage';
-import type { GameState, GameItem, ItemType, Scene, CharacterProfile, CharacterPose } from '../types';
+import type { GameState, GameItem, ItemType, Scene, SceneNote, CharacterProfile, CharacterPose } from '../types';
 import { CANVAS_W, CANVAS_H } from '../types';
 import { BUILTIN_SCENES } from '../constants/scenes';
 import { BUILTIN_ITEM_TYPES, BUILTIN_ITEMS } from '../constants/items';
@@ -17,6 +17,8 @@ function getInitialState(): GameState {
     itemTypes: BUILTIN_ITEM_TYPES,
     activeSceneId: BUILTIN_SCENES[0].id,
     selectedItemId: null,
+    chapters: [],
+    activeChapterId: null,
   };
 }
 
@@ -70,6 +72,8 @@ function mergeWithDefaults(saved: Partial<GameState>): GameState {
     itemTypes: [...missingTypes, ...migratedTypes],
     activeSceneId: saved.activeSceneId ?? initial.activeSceneId,
     selectedItemId: null,
+    chapters: saved.chapters ?? [],
+    activeChapterId: saved.activeChapterId ?? null,
   };
 }
 
@@ -126,6 +130,61 @@ export function useGameStore() {
         s.id === sceneId ? { ...s, backgroundType: 'image', backgroundImageUrl: imageUrl } : s
       ),
     }));
+  }, []);
+
+  const addSceneNote = useCallback((sceneId: string, note: SceneNote) => {
+    setState((prev) => ({
+      ...prev,
+      scenes: prev.scenes.map((s) =>
+        s.id === sceneId ? { ...s, notes: [...(s.notes ?? []), note] } : s
+      ),
+    }));
+  }, []);
+
+  const updateSceneNote = useCallback((sceneId: string, note: SceneNote) => {
+    setState((prev) => ({
+      ...prev,
+      scenes: prev.scenes.map((s) =>
+        s.id === sceneId
+          ? { ...s, notes: (s.notes ?? []).map((n) => (n.id === note.id ? note : n)) }
+          : s
+      ),
+    }));
+  }, []);
+
+  const deleteSceneNote = useCallback((sceneId: string, noteId: string) => {
+    setState((prev) => ({
+      ...prev,
+      scenes: prev.scenes.map((s) =>
+        s.id === sceneId
+          ? { ...s, notes: (s.notes ?? []).filter((n) => n.id !== noteId) }
+          : s
+      ),
+    }));
+  }, []);
+
+  // ── Chapter mutations ──────────────────────────────────────────────────────
+  const addChapter = useCallback((chapter: import('../types').Chapter) => {
+    setState((prev) => ({ ...prev, chapters: [...prev.chapters, chapter] }));
+  }, []);
+
+  const updateChapter = useCallback((chapter: import('../types').Chapter) => {
+    setState((prev) => ({
+      ...prev,
+      chapters: prev.chapters.map((c) => (c.id === chapter.id ? chapter : c)),
+    }));
+  }, []);
+
+  const deleteChapter = useCallback((chapterId: string) => {
+    setState((prev) => ({
+      ...prev,
+      chapters: prev.chapters.filter((c) => c.id !== chapterId),
+      activeChapterId: prev.activeChapterId === chapterId ? null : prev.activeChapterId,
+    }));
+  }, []);
+
+  const setActiveChapter = useCallback((chapterId: string | null) => {
+    setState((prev) => ({ ...prev, activeChapterId: chapterId }));
   }, []);
 
   // ─── Item mutations ────────────────────────────────────────────────────────
@@ -347,6 +406,9 @@ export function useGameStore() {
     setActiveScene,
     addScene,
     updateSceneBackground,
+    addSceneNote,
+    updateSceneNote,
+    deleteSceneNote,
     setSelectedItem,
     bringToFront,
     updateItemPosition,
@@ -365,5 +427,9 @@ export function useGameStore() {
     updateCharacterProfile,
     renameItemType,
     deleteItemType,
+    addChapter,
+    updateChapter,
+    deleteChapter,
+    setActiveChapter,
   };
 }

@@ -1,3 +1,10 @@
+export interface SceneNote {
+  id: string;
+  chapter: string;
+  summary: string;
+  createdAt: number;
+}
+
 export interface Scene {
   id: string;
   name: string;
@@ -5,6 +12,7 @@ export interface Scene {
   backgroundType: 'builtin' | 'image';
   backgroundKey?: string;
   backgroundImageUrl?: string;
+  notes?: SceneNote[];   // replaces old string notes
 }
 
 export interface GameItem {
@@ -22,6 +30,16 @@ export interface GameItem {
   rotation: number;       // degrees, -180..180, default 0
   flipX: boolean;         // horizontal mirror, default false
   currentPoseId?: string; // active pose for character items
+}
+
+export interface Chapter {
+  id: string;
+  name: string;
+  description: string;
+  backgroundUrl?: string;         // overrides active scene background
+  allowedCharacters: string[];    // itemType IDs; empty array = all allowed
+  systemPromptModifier: string;   // injected into AI system prompt
+  themeColor?: string;            // card accent color in UI
 }
 
 // ── Seven Emotions (七情) ──────────────────────────────────────────────────
@@ -78,6 +96,8 @@ export interface GameState {
   itemTypes: ItemType[];
   activeSceneId: string;
   selectedItemId: string | null;
+  chapters: Chapter[];
+  activeChapterId: string | null;
 }
 
 export type ResizeHandle = 'nw' | 'ne' | 'sw' | 'se';
