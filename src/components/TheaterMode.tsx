@@ -487,7 +487,7 @@ export default function TheaterMode({ state, apiKey, onClose }: Props) {
                   ? 'brightness(1)'
                   : 'brightness(0.28) grayscale(0.55)',
                 transform: `scaleX(${layout.flip ? -1 : 1}) scale(${isActive ? 1.04 : 1})`,
-                transformOrigin: layout.flip ? 'right bottom' : 'left bottom',
+                transformOrigin: layout.flip ? 'center bottom' : 'left bottom',
               }}
             >
               {src ? (

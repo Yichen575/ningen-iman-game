@@ -11,6 +11,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/deepseek/, ''),
       },
+      '/api/save-story': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
   },
 })

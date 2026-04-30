@@ -20,29 +20,29 @@ function readFileAsBuffer(file: File): Promise<ArrayBuffer> {
   });
 }
 
-// ── Warm palette ──────────────────────────────────────────────────────────────
+// ── Cipher palette (landing page aesthetic) ───────────────────────────────────
 const C = {
-  panelBg:     '#1c1309',
-  sectionBg:   '#231808',
-  border:      '#4e3418',
-  borderLight: '#362410',
-  textPri:     '#f0e0b8',
-  textSec:     '#a08858',
-  textMuted:   '#5a4028',
-  gold:        '#d4a030',
-  goldLight:   '#e8c060',
-  hoverBg:     '#2e2010',
-  activeBg:    '#3a2810',
-  activeBorder:'#c4922a',
-  success:     '#7a9040',
-  successBg:   '#1c280c',
-  successBdr:  '#3a5018',
-  danger:      '#bb4422',
-  dangerBg:    '#2a1008',
-  dangerBdr:   '#6a2010',
-  info:        '#8899aa',
-  infoBg:      '#0e1820',
-  infoBdr:     '#2a3848',
+  panelBg:     '#0b0f0c',
+  sectionBg:   '#0f1612',
+  border:      'rgba(127,176,105,0.25)',
+  borderLight: 'rgba(127,176,105,0.12)',
+  textPri:     '#f2efe6',
+  textSec:     '#d8d2c2',
+  textMuted:   'rgba(242,239,230,0.35)',
+  gold:        '#ff6b1a',
+  goldLight:   '#ff8a3d',
+  hoverBg:     'rgba(127,176,105,0.06)',
+  activeBg:    'rgba(127,176,105,0.12)',
+  activeBorder:'#7fb069',
+  success:     '#7fb069',
+  successBg:   'rgba(127,176,105,0.08)',
+  successBdr:  'rgba(127,176,105,0.3)',
+  danger:      '#c1121f',
+  dangerBg:    'rgba(193,18,31,0.1)',
+  dangerBdr:   'rgba(193,18,31,0.35)',
+  info:        '#d8d2c2',
+  infoBg:      'rgba(242,239,230,0.05)',
+  infoBdr:     'rgba(242,239,230,0.15)',
 } as const;
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -180,15 +180,29 @@ export default function Sidebar({
     }}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div style={{
-        padding: '15px 14px 13px',
-        background: `linear-gradient(to bottom, #281c0a, ${C.panelBg})`,
+        padding: '14px 14px 12px',
+        background: `linear-gradient(to bottom, #1a2320, ${C.panelBg})`,
         borderBottom: `1px solid ${C.border}`,
+        backgroundImage: `
+          linear-gradient(rgba(127,176,105,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(127,176,105,0.04) 1px, transparent 1px),
+          linear-gradient(to bottom, #1a2320, ${C.panelBg})
+        `,
+        backgroundSize: '16px 16px, 16px 16px, 100% 100%',
       }}>
-        <div style={{ fontSize: 15, fontWeight: 800, color: C.gold, letterSpacing: 2, lineHeight: 1 }}>
-          人间未满
+        <div style={{
+          fontSize: 14, fontWeight: 800, color: C.gold,
+          letterSpacing: '0.15em', lineHeight: 1,
+          fontFamily: "'Shippori Mincho', 'Noto Serif JP', serif",
+        }}>
+          人間未満
         </div>
-        <div style={{ fontSize: 9, color: C.textMuted, marginTop: 3, letterSpacing: 1 }}>
-          NINGEN · IMAN
+        <div style={{
+          fontSize: 9, color: C.activeBorder, marginTop: 5,
+          letterSpacing: '0.35em', opacity: 0.7,
+          fontFamily: "'JetBrains Mono', monospace",
+        }}>
+          NINGEN · IMAN · STUDIO
         </div>
       </div>
 
@@ -196,8 +210,9 @@ export default function Sidebar({
       <div style={{ borderBottom: `1px solid ${C.borderLight}` }}>
         <div style={{
           padding: '8px 12px 5px',
-          fontSize: 10, color: C.textMuted,
-          fontWeight: 700, letterSpacing: 1.4, textTransform: 'uppercase',
+          fontSize: 9, color: C.activeBorder, opacity: 0.8,
+          fontWeight: 700, letterSpacing: '0.35em', textTransform: 'uppercase',
+          fontFamily: "'JetBrains Mono', monospace",
         }}>
           场 景
         </div>
@@ -319,8 +334,8 @@ export default function Sidebar({
                         onBlur={() => commitRename(item.id)}
                         onClick={(e) => e.stopPropagation()}
                         style={{
-                          flex: 1, background: '#140e06', color: C.textPri,
-                          border: `1px solid ${C.gold}`, borderRadius: 3,
+                          flex: 1, background: 'rgba(0,0,0,0.6)', color: C.textPri,
+                          border: `1px solid ${C.gold}`, borderRadius: 0,
                           padding: '2px 6px', fontSize: 12, outline: 'none',
                         }}
                       />
@@ -362,7 +377,7 @@ export default function Sidebar({
         marginTop: 'auto',
         borderTop: `1px solid ${C.borderLight}`,
         padding: '10px 12px 12px',
-        background: `linear-gradient(to top, #281c0a, ${C.panelBg})`,
+        background: `linear-gradient(to top, #1a2320, ${C.panelBg})`,
       }}>
         <audio ref={audioRef} loop={looping && tracks.length <= 1} onEnded={handleEnded} />
 
@@ -378,7 +393,7 @@ export default function Sidebar({
             title={tracks.length === 0 ? '点击上传音乐' : spinning ? '暂停' : '播放'}
             style={{
               width: 30, height: 30, borderRadius: '50%', flexShrink: 0,
-              background: `conic-gradient(#2e1e0c 0%, ${C.activeBg} 35%, #281608 60%, #3a2810 100%)`,
+              background: `conic-gradient(#070a07 0%, ${C.activeBg} 35%, #0b0f0c 60%, #0f1612 100%)`,
               border: `1.5px solid ${spinning ? C.activeBorder : C.border}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
@@ -387,7 +402,7 @@ export default function Sidebar({
               transition: 'border-color 0.3s, box-shadow 0.3s',
             }}
           >
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#140e06', border: `1px solid ${C.border}` }} />
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#0b0f0c', border: `1px solid ${C.border}` }} />
           </div>
 
           {/* Track name */}
@@ -458,8 +473,8 @@ export default function Sidebar({
         const sorted = [...(scene.notes ?? [])].sort((a, b) => a.createdAt - b.createdAt);
         const inputStyle: React.CSSProperties = {
           width: '100%', boxSizing: 'border-box',
-          background: '#140e06', color: C.textPri,
-          border: `1px solid ${C.border}`, borderRadius: 4,
+          background: 'rgba(0,0,0,0.6)', color: C.textPri,
+          border: `1px solid ${C.border}`, borderRadius: 0,
           padding: '7px 10px', fontSize: 12, outline: 'none', fontFamily: 'inherit',
         };
         return (
@@ -468,10 +483,10 @@ export default function Sidebar({
               display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div onClick={(e) => e.stopPropagation()}
               style={{
-                background: '#1c1309', border: `2px solid ${C.border}`,
-                borderRadius: 8, padding: 22, width: 500, maxWidth: '92vw',
+                background: '#0b0f0c', border: `1px solid ${C.border}`,
+                borderRadius: 0, padding: 22, width: 500, maxWidth: '92vw',
                 maxHeight: '85vh', display: 'flex', flexDirection: 'column',
-                boxShadow: `0 0 40px ${C.gold}14`,
+                boxShadow: `0 0 80px rgba(0,0,0,0.9), 0 0 0 1px rgba(127,176,105,0.1)`,
               }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: C.gold, marginBottom: 14, flexShrink: 0 }}>
                 📝　{scene.name}
@@ -527,8 +542,8 @@ export default function Sidebar({
                       style={{ background: 'none', border: `1px solid ${C.borderLight}`, color: C.textMuted,
                         cursor: 'pointer', fontSize: 12, padding: '6px 14px', borderRadius: 4 }}>取消</button>
                     <button onClick={saveNote} disabled={!formChapter.trim() && !formSummary.trim()}
-                      style={{ background: '#2e1e0c', border: `1px solid ${C.activeBorder}`, color: C.gold,
-                        cursor: 'pointer', fontSize: 12, padding: '6px 14px', borderRadius: 4,
+                      style={{ background: 'rgba(255,107,26,0.12)', border: `1px solid ${C.gold}`, color: C.gold,
+                        cursor: 'pointer', fontSize: 12, padding: '6px 14px', borderRadius: 0,
                         opacity: (!formChapter.trim() && !formSummary.trim()) ? 0.4 : 1 }}>保存这条记录</button>
                   </div>
                 </div>

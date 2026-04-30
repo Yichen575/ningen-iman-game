@@ -2,37 +2,37 @@ import { useRef, useState } from 'react';
 import type { GameState, ItemType, CharacterProfile, CharacterPose } from '../types';
 import CharacterProfileModal from './CharacterProfileModal';
 
-// ── Warm palette (Stardew Valley × 古风水墨) ─────────────────────────────────
+// ── Cipher palette (landing page aesthetic) ───────────────────────────────────
 const C = {
-  panelBg:     '#1c1309',
-  sectionBg:   '#231808',
-  border:      '#4e3418',
-  borderLight: '#362410',
-  textPri:     '#f0e0b8',
-  textSec:     '#a08858',
-  textMuted:   '#5a4028',
-  gold:        '#d4a030',
-  goldLight:   '#e8c060',
-  hoverBg:     '#3a2810',
-  activeBg:    '#402e12',
-  btnBg:       '#2e1e0c',
-  btnBorder:   '#5a3e1a',
-  btnHover:    '#4a2e10',
-  charAccent:  '#c0a878',
-  charBorder:  '#6a5030',
-  poseBorder:  '#c0a878',
-  success:     '#7a9040',
-  successBg:   '#1e2a0e',
-  successBdr:  '#3a5018',
-  danger:      '#bb4422',
-  dangerBg:    '#2a1008',
-  dangerBdr:   '#6a2010',
-  info:        '#8899aa',
-  infoBg:      '#0e1820',
-  infoBdr:     '#2a3848',
-  purpleBg:    '#1e1628',
-  purpleBdr:   '#4a3868',
-  purpleText:  '#c0a8d8',
+  panelBg:     '#0b0f0c',
+  sectionBg:   '#0f1612',
+  border:      'rgba(127,176,105,0.25)',
+  borderLight: 'rgba(127,176,105,0.12)',
+  textPri:     '#f2efe6',
+  textSec:     '#d8d2c2',
+  textMuted:   'rgba(242,239,230,0.35)',
+  gold:        '#ff6b1a',
+  goldLight:   '#ff8a3d',
+  hoverBg:     'rgba(127,176,105,0.08)',
+  activeBg:    'rgba(127,176,105,0.12)',
+  btnBg:       '#0f1612',
+  btnBorder:   'rgba(127,176,105,0.2)',
+  btnHover:    'rgba(127,176,105,0.1)',
+  charAccent:  '#ff6b1a',
+  charBorder:  'rgba(255,107,26,0.3)',
+  poseBorder:  '#ff6b1a',
+  success:     '#7fb069',
+  successBg:   'rgba(127,176,105,0.08)',
+  successBdr:  'rgba(127,176,105,0.3)',
+  danger:      '#c1121f',
+  dangerBg:    'rgba(193,18,31,0.1)',
+  dangerBdr:   'rgba(193,18,31,0.35)',
+  info:        '#d8d2c2',
+  infoBg:      'rgba(242,239,230,0.05)',
+  infoBdr:     'rgba(242,239,230,0.15)',
+  purpleBg:    'rgba(127,176,105,0.06)',
+  purpleBdr:   'rgba(127,176,105,0.2)',
+  purpleText:  '#7fb069',
 } as const;
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -162,7 +162,7 @@ export default function AssetPanel({
                     flexShrink: 0, cursor: 'pointer',
                     width: 36, height: 36, borderRadius: 4,
                     border: `1.5px solid ${C.border}`,
-                    background: '#140e06', overflow: 'hidden',
+                    background: '#070a07', overflow: 'hidden',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'border-color 0.15s',
                   }}
@@ -185,8 +185,8 @@ export default function AssetPanel({
                     }}
                     onBlur={() => commitRename(t.id)}
                     style={{
-                      flex: 1, background: '#140e06', color: C.textPri,
-                      border: `1px solid ${C.gold}`, borderRadius: 3,
+                      flex: 1, background: 'rgba(0,0,0,0.6)', color: C.textPri,
+                      border: `1px solid ${C.gold}`, borderRadius: 0,
                       padding: '2px 6px', fontSize: 12, outline: 'none', minWidth: 0,
                     }}
                   />
@@ -257,7 +257,7 @@ export default function AssetPanel({
                                 onClick={() => { sceneItems.forEach((i) => onSetItemPose(i.id, pose.id)); }}
                                 style={{
                                   width: 34, height: 34, objectFit: 'contain',
-                                  borderRadius: 3, cursor: 'pointer', background: '#140e06',
+                                  borderRadius: 3, cursor: 'pointer', background: '#070a07',
                                   border: isActive ? `1.5px solid ${C.poseBorder}` : `1px solid ${C.border}`,
                                   boxSizing: 'border-box', display: 'block',
                                   transition: 'border-color 0.15s',
@@ -285,7 +285,7 @@ export default function AssetPanel({
                           title="添加姿态"
                           style={{
                             width: 34, height: 34, borderRadius: 3,
-                            background: '#140e06', border: `1px dashed ${C.border}`,
+                            background: '#070a07', border: `1px dashed ${C.border}`,
                             color: C.textMuted, fontSize: 18, cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             flexShrink: 0, transition: 'border-color 0.15s, color 0.15s',
@@ -330,12 +330,22 @@ export default function AssetPanel({
       }}>
         {/* Panel header */}
         <div style={{
-          padding: '13px 12px 11px',
+          padding: '14px 12px 12px',
           borderBottom: `1px solid ${C.border}`,
-          background: `linear-gradient(to bottom, #281c0a, ${C.panelBg})`,
+          background: `linear-gradient(to bottom, #1a2320, ${C.panelBg})`,
+          backgroundImage: `
+            linear-gradient(rgba(127,176,105,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(127,176,105,0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, #1a2320, ${C.panelBg})
+          `,
+          backgroundSize: '16px 16px, 16px 16px, 100% 100%',
         }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, letterSpacing: 1 }}>
-            素 材 管 理
+          <div style={{
+            fontSize: 9, fontWeight: 700, color: '#7fb069',
+            letterSpacing: '0.35em', textTransform: 'uppercase',
+            fontFamily: "'JetBrains Mono', monospace",
+          }}>
+            · 素 材 管 理
           </div>
         </div>
 
@@ -393,14 +403,14 @@ function Section({
   return (
     <div style={{
       padding: '11px 10px',
-      borderBottom: last ? 'none' : `1px solid #362410`,
+      borderBottom: last ? 'none' : `1px solid rgba(127,176,105,0.12)`,
     }}>
       <div style={{
         fontSize: 11, fontWeight: 700, letterSpacing: 1.2,
-        color: accent ?? '#a08858',
+        color: accent ?? '#d8d2c2',
         marginBottom: 8,
         paddingBottom: 5,
-        borderBottom: `1px solid ${borderColor ?? '#362410'}`,
+        borderBottom: `1px solid ${borderColor ?? 'rgba(127,176,105,0.12)'}`,
       }}>
         {label}
       </div>
@@ -418,13 +428,14 @@ function UploadBtn({
   children: React.ReactNode;
 }) {
   const base: React.CSSProperties = {
-    width: '100%', background: '#2e1e0c',
-    border: `1px solid ${borderColor ?? '#5a3e1a'}`,
-    color: color ?? '#a08858',
-    cursor: 'pointer', fontSize: 12,
-    padding: '7px 0', borderRadius: 5,
+    width: '100%', background: 'rgba(11,15,12,0.8)',
+    border: `1px solid ${borderColor ?? 'rgba(127,176,105,0.2)'}`,
+    color: color ?? '#d8d2c2',
+    cursor: 'pointer', fontSize: 11,
+    padding: '7px 0', borderRadius: 0,
     transition: 'background 0.15s, color 0.15s, border-color 0.15s',
-    letterSpacing: 0.3,
+    letterSpacing: '0.15em',
+    fontFamily: "'JetBrains Mono', monospace",
   };
   return (
     <button
@@ -432,15 +443,15 @@ function UploadBtn({
       style={base}
       onMouseEnter={(e) => {
         const b = e.currentTarget as HTMLButtonElement;
-        b.style.background = '#4a2e10';
-        b.style.color = color ? '#e8c060' : '#d4a030';
-        b.style.borderColor = '#d4a030';
+        b.style.background = 'rgba(127,176,105,0.1)';
+        b.style.color = color ? '#ff8a3d' : '#7fb069';
+        b.style.borderColor = color ? 'rgba(255,107,26,0.5)' : 'rgba(127,176,105,0.5)';
       }}
       onMouseLeave={(e) => {
         const b = e.currentTarget as HTMLButtonElement;
-        b.style.background = '#2e1e0c';
-        b.style.color = color ?? '#a08858';
-        b.style.borderColor = borderColor ?? '#5a3e1a';
+        b.style.background = 'rgba(11,15,12,0.8)';
+        b.style.color = color ?? '#d8d2c2';
+        b.style.borderColor = borderColor ?? 'rgba(127,176,105,0.2)';
       }}
     >
       {children}
@@ -450,8 +461,10 @@ function UploadBtn({
 
 const actionBtn: React.CSSProperties = {
   width: '100%', background: 'transparent',
-  border: '1px solid #362410', color: '#a08858',
-  cursor: 'pointer', fontSize: 11,
-  padding: '5px 8px', borderRadius: 4, textAlign: 'left',
+  border: '1px solid rgba(127,176,105,0.15)', color: '#d8d2c2',
+  cursor: 'pointer', fontSize: 10,
+  padding: '5px 8px', borderRadius: 0, textAlign: 'left',
   transition: 'background 0.12s, color 0.12s',
+  fontFamily: "'JetBrains Mono', monospace",
+  letterSpacing: '0.1em',
 };

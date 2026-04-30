@@ -1,3 +1,19 @@
+:root {
+  --ink:          #0b0f0c;
+  --ink-2:        #0f1612;
+  --ink-3:        #1a2320;
+  --paper:        #f2efe6;
+  --paper-dim:    #d8d2c2;
+  --leaf-deep:    #1f4530;
+  --leaf:         #2d5e3e;
+  --leaf-glow:    #7fb069;
+  --orange:       #ff6b1a;
+  --orange-bright:#ff8a3d;
+  --orange-deep:  #c94a0a;
+  --blood:        #c1121f;
+  --cyan:         #00e5ff;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -8,12 +24,29 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0a0a0f;
+  background: var(--ink);
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Cormorant Garamond', 'Noto Serif JP', 'Shippori Mincho', serif;
   -webkit-font-smoothing: antialiased;
+  color: var(--paper);
+}
+
+/* Scanline overlay — same as landing page */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.1) 3px, rgba(0,0,0,0) 4px
+    );
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: overlay;
+  opacity: 0.35;
 }
 
 @keyframes blink {
@@ -26,7 +59,7 @@ body {
   to   { transform: rotate(360deg); }
 }
 
-/* Drag state — disable all glow/filter on container AND inner img */
+/* Drag state */
 .is-dragging,
 .is-dragging img {
   filter: none !important;
@@ -36,16 +69,20 @@ body {
   cursor: grabbing !important;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0a0f;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ink); }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a3a;
-  border-radius: 3px;
+  background: rgba(127, 176, 105, 0.2);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a4a;
+  background: rgba(127, 176, 105, 0.4);
 }
+
+/* Font helpers */
+.mono  { font-family: 'JetBrains Mono', monospace; }
+.jp    { font-family: 'Shippori Mincho', 'Noto Serif JP', serif; }
+.serif { font-family: 'Cormorant Garamond', serif; }
+
+::selection { background: var(--orange); color: var(--ink); }

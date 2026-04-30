@@ -7,9 +7,11 @@ import SettingsModal from './components/SettingsModal';
 import TheaterMode from './components/TheaterMode';
 import ChapterManager from './components/ChapterManager';
 import ChapterTransition from './components/ChapterTransition';
+import LandingPage from './components/landing/LandingPage';
 
 export default function App() {
   const store = useGameStore();
+  const [page, setPage] = useState<'landing' | 'game'>('landing');
   const [showSettings, setShowSettings] = useState(false);
   const [showTheater, setShowTheater] = useState(false);
   const [showChapters, setShowChapters] = useState(false);
@@ -69,19 +71,30 @@ export default function App() {
       <div style={{
         width: '100vw', height: '100vh',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: '#0a0a0f', fontSize: 14, color: '#ffd84a',
+        flexDirection: 'column', gap: 16, background: '#0b0f0c',
       }}>
-        载入中...
+        <div style={{
+          fontFamily: "'Shippori Mincho', 'Noto Serif JP', serif",
+          fontSize: 42, fontWeight: 800, color: '#ff6b1a', letterSpacing: '0.12em',
+        }}>人間未満</div>
+        <div style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 10, color: '#7fb069', letterSpacing: '0.4em', opacity: 0.7,
+        }}>LOADING · NINGEN IMAN</div>
       </div>
     );
+  }
+
+  if (page === 'landing') {
+    return <LandingPage onPlay={() => setPage('game')} />;
   }
 
   const pendingChapterName = transitioning && pendingChapterId
     ? store.state.chapters.find((c) => c.id === pendingChapterId)?.name
     : undefined;
 
-  // Sidebar toggle styling (warm palette)
-  const C = { border: '#4e3418', bg: '#1c1309', text: '#5a4028', gold: '#d4a030' };
+  // Sidebar toggle styling
+  const C = { border: 'rgba(127,176,105,0.25)', bg: '#0b0f0c', text: 'rgba(242,239,230,0.3)', gold: '#7fb069' };
 
   return (
     <div style={{
@@ -111,8 +124,31 @@ export default function App() {
         {/* Toolbar */}
         <div style={{
           position: 'absolute', top: 12, right: 12, zIndex: 100,
-          display: 'flex', gap: 8, alignItems: 'center',
+          display: 'flex', gap: 6, alignItems: 'center',
         }}>
+          {/* Back to landing */}
+          <button
+            onClick={() => setPage('landing')}
+            style={{
+              background: 'rgba(11,15,12,0.9)', border: '1px solid rgba(127,176,105,0.2)',
+              color: 'rgba(242,239,230,0.4)', cursor: 'pointer',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10, letterSpacing: '0.2em',
+              padding: '6px 14px',
+              display: 'flex', alignItems: 'center', gap: 5,
+              transition: 'border-color 0.15s, color 0.15s', flexShrink: 0,
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(127,176,105,0.4)';
+              (e.currentTarget as HTMLButtonElement).style.color = '#d8d2c2';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(127,176,105,0.2)';
+              (e.currentTarget as HTMLButtonElement).style.color = 'rgba(242,239,230,0.4)';
+            }}
+          >
+            ← 主页
+          </button>
           {/* Chapter indicator (shown when a chapter is active) */}
           {activeChapter && (
             <div
@@ -120,11 +156,12 @@ export default function App() {
               title="当前篇章"
               style={{
                 display: 'flex', alignItems: 'center', gap: 5,
-                padding: '5px 10px', borderRadius: 4, cursor: 'pointer',
-                background: `${activeChapter.themeColor ?? C.gold}18`,
-                border: `1px solid ${activeChapter.themeColor ?? C.gold}55`,
-                color: activeChapter.themeColor ?? C.gold,
-                fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
+                padding: '5px 12px', cursor: 'pointer',
+                background: `${activeChapter.themeColor ?? '#ff6b1a'}15`,
+                border: `1px solid ${activeChapter.themeColor ?? '#ff6b1a'}55`,
+                color: activeChapter.themeColor ?? '#ff6b1a',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10, letterSpacing: '0.2em',
                 flexShrink: 0, transition: 'background 0.15s',
               }}
             >
@@ -136,19 +173,21 @@ export default function App() {
           <button
             onClick={() => setShowChapters(true)}
             style={{
-              background: '#1c1309', border: `1px solid ${C.border}`,
-              color: '#a08858', cursor: 'pointer', fontSize: 12,
-              padding: '6px 12px', borderRadius: 4,
+              background: 'rgba(11,15,12,0.9)', border: '1px solid rgba(127,176,105,0.25)',
+              color: '#d8d2c2', cursor: 'pointer',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10, letterSpacing: '0.2em',
+              padding: '6px 14px',
               display: 'flex', alignItems: 'center', gap: 5,
               transition: 'border-color 0.15s, color 0.15s', flexShrink: 0,
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = C.gold;
-              (e.currentTarget as HTMLButtonElement).style.color = C.gold;
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#7fb069';
+              (e.currentTarget as HTMLButtonElement).style.color = '#7fb069';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = C.border;
-              (e.currentTarget as HTMLButtonElement).style.color = '#a08858';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(127,176,105,0.25)';
+              (e.currentTarget as HTMLButtonElement).style.color = '#d8d2c2';
             }}
           >
             ◈ 篇章
@@ -158,19 +197,21 @@ export default function App() {
           <button
             onClick={() => setShowTheater(true)}
             style={{
-              background: '#12101e', border: '1px solid #3a2a5a',
-              color: '#9a70d0', cursor: 'pointer', fontSize: 12,
-              padding: '6px 12px', borderRadius: 4,
+              background: 'rgba(11,15,12,0.9)', border: '1px solid rgba(255,107,26,0.3)',
+              color: '#ff8a3d', cursor: 'pointer',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10, letterSpacing: '0.2em',
+              padding: '6px 14px',
               display: 'flex', alignItems: 'center', gap: 5,
               transition: 'border-color 0.15s, color 0.15s', flexShrink: 0,
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#c8a0f0';
-              (e.currentTarget as HTMLButtonElement).style.color = '#c8a0f0';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#ff6b1a';
+              (e.currentTarget as HTMLButtonElement).style.color = '#ff6b1a';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#3a2a5a';
-              (e.currentTarget as HTMLButtonElement).style.color = '#9a70d0';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,107,26,0.3)';
+              (e.currentTarget as HTMLButtonElement).style.color = '#ff8a3d';
             }}
           >
             ✦ 小剧场
@@ -181,10 +222,10 @@ export default function App() {
             onClick={() => setIsLightOn((v) => !v)}
             title={isLightOn ? '关灯' : '开灯'}
             style={{
-              background: isLightOn ? '#1a1e28' : '#0a0c10',
-              border: `1px solid ${isLightOn ? '#ffd84a' : '#446'}`,
-              color: isLightOn ? '#ffd84a' : '#446',
-              cursor: 'pointer', fontSize: 16, width: 32, height: 32, borderRadius: 4,
+              background: 'rgba(11,15,12,0.9)',
+              border: `1px solid ${isLightOn ? 'rgba(255,107,26,0.5)' : 'rgba(127,176,105,0.2)'}`,
+              color: isLightOn ? '#ff8a3d' : 'rgba(242,239,230,0.25)',
+              cursor: 'pointer', fontSize: 14, width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'all 0.3s ease', flexShrink: 0,
             }}
@@ -196,19 +237,21 @@ export default function App() {
           <button
             onClick={() => setShowSettings(true)}
             style={{
-              background: '#1a1e28', border: '1px solid #444',
-              color: '#aaa', cursor: 'pointer', fontSize: 12,
-              padding: '6px 12px', borderRadius: 4,
+              background: 'rgba(11,15,12,0.9)', border: '1px solid rgba(127,176,105,0.2)',
+              color: 'rgba(242,239,230,0.5)', cursor: 'pointer',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10, letterSpacing: '0.2em',
+              padding: '6px 14px',
               display: 'flex', alignItems: 'center', gap: 5,
               transition: 'border-color 0.15s, color 0.15s', flexShrink: 0,
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#ffd84a';
-              (e.currentTarget as HTMLButtonElement).style.color = '#ffd84a';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(127,176,105,0.5)';
+              (e.currentTarget as HTMLButtonElement).style.color = '#d8d2c2';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#444';
-              (e.currentTarget as HTMLButtonElement).style.color = '#aaa';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(127,176,105,0.2)';
+              (e.currentTarget as HTMLButtonElement).style.color = 'rgba(242,239,230,0.5)';
             }}
           >
             ⚙ 设置

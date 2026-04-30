@@ -44,7 +44,17 @@ export default function GameCanvas({
   }, [state.selectedItemId, onDeleteItem]);
 
   return (
-    <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f', overflow: 'auto' }}>
+    <div style={{
+      flex: 1, minWidth: 0, minHeight: 0,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: '#0b0f0c',
+      backgroundImage: `
+        linear-gradient(rgba(127,176,105,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(127,176,105,0.04) 1px, transparent 1px)
+      `,
+      backgroundSize: '48px 48px',
+      overflow: 'auto',
+    }}>
       <div
         ref={canvasRef}
         onContextMenu={(e) => e.preventDefault()}
@@ -57,7 +67,7 @@ export default function GameCanvas({
           height: CANVAS_H,
           flexShrink: 0,
           overflow: 'hidden',
-          boxShadow: '0 0 0 2px #2a2a3a, 0 0 40px rgba(0,0,0,0.8)',
+          boxShadow: '0 0 0 1px rgba(127,176,105,0.3), 0 0 80px rgba(0,0,0,0.9)',
         }}
       >
         {activeScene && <SceneBackground scene={activeScene} />}
