@@ -3,8 +3,7 @@ import STORY_DATA from './storyData';
 import type { Volume, Chapter } from './storyData';
 import { PaperTexture, Mudra, Kunai, HankoSeal, Fuuda, Shuriken } from './ShinobiAssets';
 
-const LS_KEY = 'ningen.storyData.v1';
-const LS_PREFS = 'ningen.readerPrefs.v1';
+const LS_PREFS = 'ningen.readerPrefs.v2';
 
 interface ViewState {
   level: 'A' | 'B' | 'C';
@@ -39,18 +38,6 @@ const navBtn = (right: boolean): React.CSSProperties => ({
   border: '1px solid rgba(127,176,105,0.25)',
   color: 'var(--paper)', cursor: 'pointer', fontFamily: 'inherit',
 });
-
-function loadData(): Volume[] {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (_) {}
-  return JSON.parse(JSON.stringify(STORY_DATA));
-}
-
-function saveData(d: Volume[]) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(d)); } catch (_) {}
-}
 
 function loadPrefs(): Prefs {
   try {
@@ -108,12 +95,17 @@ function Editable({ value, onChange, style, multiline = false, tag = 'span', cla
 }
 
 export default function StoryReader({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [data, setData] = useState<Volume[]>(loadData);
+  const [data, setData] = useState<Volume[]>(() => JSON.parse(JSON.stringify(STORY_DATA)));
   const [view, setView] = useState<ViewState>({ level: 'A', volId: null, chapId: null });
   const [editMode, setEditMode] = useState(false);
   const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'ok' | 'err'>('idle');
   const [visible, setVisible] = useState(true);
+
+  // Chapter body loaded on demand from markdown files via server
+  const [chapterBody, setChapterBody] = useState<string[]>([]);
+  const [bodyLoading, setBodyLoading] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const fadeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -121,9 +113,6 @@ export default function StoryReader({ open, onClose }: { open: boolean; onClose:
     if (open) setView({ level: 'A', volId: null, chapId: null });
   }, [open]);
 
-  // useLayoutEffect runs synchronously before the browser paints, so setting
-  // visible=false here hides the new content in the same frame it appears —
-  // no one-frame flash of incoming content at full opacity.
   useLayoutEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
     setVisible(false);
@@ -132,7 +121,20 @@ export default function StoryReader({ open, onClose }: { open: boolean; onClose:
     return () => { if (fadeTimer.current) clearTimeout(fadeTimer.current); };
   }, [view]);
 
-  useEffect(() => { saveData(data); }, [data]);
+  // Load chapter body from server whenever we enter a chapter
+  useEffect(() => {
+    if (view.level !== 'C' || !view.volId || !view.chapId) return;
+    setBodyLoading(true);
+    setChapterBody([]);
+    fetch(`/api/story/${view.volId}/${view.chapId}`)
+      .then(r => r.json())
+      .then(({ text }: { text: string }) => {
+        setChapterBody(text ? text.split('\n\n') : ['']);
+      })
+      .catch(() => setChapterBody(['（正文加载失败，请确认服务器正在运行）']))
+      .finally(() => setBodyLoading(false));
+  }, [view.level, view.volId, view.chapId]);
+
   useEffect(() => { savePrefs(prefs); }, [prefs]);
 
   useEffect(() => {
@@ -163,7 +165,7 @@ export default function StoryReader({ open, onClose }: { open: boolean; onClose:
       : v));
 
   const addChapter = (volId: string) => {
-    const newCh: Chapter = { id: 'c' + Date.now(), num: '新', title: '新章节', subtitle: 'New Chapter', date: '——', body: ['（在此输入正文……）'] };
+    const newCh: Chapter = { id: 'c' + Date.now(), num: '新', title: '新章节', subtitle: 'New Chapter', date: '——' };
     setData(d => d.map(v => v.id === volId ? { ...v, chapters: [...v.chapters, newCh] } : v));
   };
 
@@ -174,20 +176,32 @@ export default function StoryReader({ open, onClose }: { open: boolean; onClose:
   };
 
   const resetData = () => {
-    if (!confirm('重置所有数据为默认？所有自定义内容将丢失。')) return;
-    localStorage.removeItem(LS_KEY);
+    if (!confirm('重置元数据为默认？（正文内容不受影响）')) return;
     setData(JSON.parse(JSON.stringify(STORY_DATA)));
   };
 
   const saveToFile = async () => {
     setSaveState('saving');
     try {
-      const res = await fetch('/api/save-story', {
+      // Save metadata to storyData.ts
+      const metaRes = await fetch('/api/save-story', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      setSaveState(res.ok ? 'ok' : 'err');
+      if (!metaRes.ok) throw new Error('metadata save failed');
+
+      // If in chapter view, also save the body to its markdown file
+      if (view.level === 'C' && view.volId && view.chapId) {
+        const bodyRes = await fetch(`/api/story/${view.volId}/${view.chapId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: chapterBody.join('\n\n') }),
+        });
+        if (!bodyRes.ok) throw new Error('body save failed');
+      }
+
+      setSaveState('ok');
     } catch {
       setSaveState('err');
     }
@@ -438,21 +452,29 @@ export default function StoryReader({ open, onClose }: { open: boolean; onClose:
     const idx = vol.chapters.findIndex(c => c.id === chap.id);
     const prev = vol.chapters[idx - 1];
     const next = vol.chapters[idx + 1];
-    const pullQuote = (chap.pullQuote && chap.pullQuote.trim()) || (chap.body[0] || '').slice(0, 60).split('。')[0];
+    const pullQuote = (chap.pullQuote && chap.pullQuote.trim()) || (chapterBody[0] || '').slice(0, 60).split('。')[0];
 
     const updateBodyLine = (i: number, text: string) => {
-      const newBody = chap.body.slice(); newBody[i] = text;
-      updateChapter(vol.id, chap.id, { body: newBody });
+      const newBody = chapterBody.slice(); newBody[i] = text;
+      setChapterBody(newBody);
     };
     const addParagraph = (i: number) => {
-      const newBody = chap.body.slice(); newBody.splice(i + 1, 0, '');
-      updateChapter(vol.id, chap.id, { body: newBody });
+      const newBody = chapterBody.slice(); newBody.splice(i + 1, 0, '');
+      setChapterBody(newBody);
     };
     const deleteParagraph = (i: number) => {
-      if (chap.body.length <= 1) return;
-      const newBody = chap.body.slice(); newBody.splice(i, 1);
-      updateChapter(vol.id, chap.id, { body: newBody });
+      if (chapterBody.length <= 1) return;
+      const newBody = chapterBody.slice(); newBody.splice(i, 1);
+      setChapterBody(newBody);
     };
+
+    if (bodyLoading) return (
+      <div style={{ display: 'grid', placeItems: 'center', height: '60vh' }}>
+        <div className="mono" style={{ fontSize: 11, letterSpacing: '0.3em', color: 'var(--paper-dim)', opacity: 0.5 }}>
+          LOADING…
+        </div>
+      </div>
+    );
 
     return (
       <div style={{ padding: '60px 24px 120px', position: 'relative' }}>
@@ -498,8 +520,7 @@ export default function StoryReader({ open, onClose }: { open: boolean; onClose:
           )}
 
           <div style={{ fontFamily: fontStack, fontSize: prefs.fontSize, lineHeight: 1.9 }}>
-            {chap.body.map((para, i) => {
-              // drop cap only on first paragraph, no newlines, not in edit mode
+            {chapterBody.map((para, i) => {
               const showDropCap = i === 0 && !editMode && para.length > 0 && !para.includes('\n');
               const first = showDropCap ? para.charAt(0) : '';
               const rest = showDropCap ? para.slice(1) : para;

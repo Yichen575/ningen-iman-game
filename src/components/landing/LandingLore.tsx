@@ -34,13 +34,20 @@ export default function LandingLore() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: 64, alignItems: 'start' }}>
           <div>
-            <div className="jp" style={{ fontSize: 14, letterSpacing: '0.4em', color: 'var(--leaf-glow)', marginBottom: 24 }}>一 · 事件</div>
-            <p className="serif" style={{ fontSize: 30, lineHeight: 1.45, fontStyle: 'italic', color: 'var(--paper)', marginBottom: 28 } as React.CSSProperties}>
-              "They found <span style={{ color: 'var(--orange)', fontStyle: 'normal' }}>Watanabe Nakamura</span> slumped
-              against the C-rank shelves, a brush still in his hand and
-              <span style={{ color: 'var(--orange)', fontStyle: 'normal' }}> twenty-four kanji</span>
-              burned into his ribs like a confession he could not finish."
-            </p>
+            <div className="jp" style={{ fontSize: 20, letterSpacing: '0.4em', color: 'var(--leaf-glow)', marginBottom: 24 }}>§ 嘘の者</div>
+            <p style={{ fontFamily: "'Times New Roman', Times, serif", fontSize: 18, lineHeight: 1.7, color: 'var(--paper)', marginBottom: 20 }}>
+              
+              她捂住了脸，<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>長嘆</span>一声，暗紅色的眼睛从指缝之间透出来，好像绷着一层灰色的缎子。
+              <br />
+              <br />
+              她又继续默默坐了一会，然后站起身。<br />
+              <br />
+              如果这便是你想要的……我一定会让事情<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>結束</span>。<br />
+              她垂眼，最后看了一眼那<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>埋葬</span>了她所有依靠和希望的地方，然后慢慢朝前走去<br />
+               <br />
+             
+              <span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}></span><br />
+           </p>
             <div className="mono" style={{ fontSize: 10, letterSpacing: '0.3em', color: 'var(--paper-dim)', opacity: 0.7, paddingLeft: 20, borderLeft: '2px solid var(--orange)' }}>
               — CORONER'S SCROLL · 04·17·Y·27<br />
               <span style={{ opacity: 0.6 }}>FILED BY: HATAKE. K.</span>
@@ -48,23 +55,26 @@ export default function LandingLore() {
           </div>
 
           <div>
-            <div className="jp" style={{ fontSize: 14, letterSpacing: '0.4em', color: 'var(--leaf-glow)', marginBottom: 24 }}>二 · 任務</div>
-            <p className="serif" style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--paper-dim)' } as React.CSSProperties}>
-              You are <span style={{ color: 'var(--paper)', fontWeight: 600 }}>Inspector Kuon</span>,
-              a low-ranked Chūnin from the cryptography corps, handed this case because
-              no one above you wants their name on it. The Hokage's office has given you
-              <span style={{ color: 'var(--orange)' }}> three weeks</span> before the scandal
-              reaches Suna. You have a notebook, a cipher key burned at one corner, and a
-              feeling the archives are watching you back.
+            <div className="jp" style={{ fontSize: 20, letterSpacing: '0.4em', color: 'var(--leaf-glow)', marginBottom: 24 }}>§ 失去な者</div>
+            <p style={{ fontFamily: "'Times New Roman', Times, serif", fontSize: 18, lineHeight: 1.7, color: 'var(--paper-dim)' }}>
+              我跪在山坡上，蜷縮佝偻起<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>身體</span>，像一隻受傷的小獸，發出<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>壓抑</span>到极点的喑哑嗚咽声。 <br />
+               <br />
+              滾燙的额头貼著<span style={{ fontStyle: 'normal' ,fontSize: 30}}>潮濕的草葉</span>，手指摳爛了泥土裡的草根，淚已經流乾，胸腔裡只能發出最後一聲嘶哑的请求。 <br />
+               <br />
+              别把我留在没有你的<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>地狱</span>里啊……
             </p>
           </div>
 
           <div>
-            <div className="jp" style={{ fontSize: 14, letterSpacing: '0.4em', color: 'var(--leaf-glow)', marginBottom: 24 }}>三 · 遊び方</div>
-            <p className="serif" style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--paper-dim)', marginBottom: 24 } as React.CSSProperties}>
-              Interrogate. Decrypt. Sneak across the rooftops at dusk to read a scroll
-              before it burns. Every chapter is a locked room; every side-scrolling
-              stealth section is a piece you'll need to read the next one.
+            <div className="jp" style={{ fontSize: 20, letterSpacing: '0.4em', color: 'var(--leaf-glow)', marginBottom: 24 }}>§ 魂を返せ</div>
+            <p style={{ fontFamily: "'Times New Roman', Times, serif", fontSize: 18, lineHeight: 1.7, color: 'var(--paper-dim)', marginBottom: 24 }}>
+              即便知道復仇之路的<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>盡頭</span>空無一物，我還是會走上那條路。 <br />
+              
+              有些事情，彷彿不去做就不行呢，你明白嗎⋯⋯  <br />
+               <br />
+              她吐出一口<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>煙霧</span>。  <br />
+               <br />
+              至少⋯⋯我得做點什麼，來解釋我為什麼<span style={{ color: 'var(--orange)', fontStyle: 'normal' ,fontSize: 30}}>苟活</span>到現在的事
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 18px', fontFamily: 'JetBrains Mono, monospace', fontSize: 11, letterSpacing: '0.15em', color: 'var(--paper-dim)' }}>
               <span style={{ color: 'var(--orange)' }}>◆</span> <span>Visual novel + 2D stealth</span>
@@ -82,7 +92,7 @@ export default function LandingLore() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           gap: 20, overflow: 'hidden',
         }}>
-          {'謎·影·忍·刃·雨·夢·血·器·闇·月·刀·眼'.split('·').map((g, i) => (
+          {'幻·影·忍·刃·雨·夢·血·器·闇·慾·術·眼'.split('·').map((g, i) => (
             <div key={i} className="jp" style={{
               fontSize: 42, fontWeight: 700,
               color: i % 3 === 0 ? 'var(--orange)' : 'var(--leaf-glow)',

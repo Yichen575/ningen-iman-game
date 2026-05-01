@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Chapter, GameState } from '../types';
+import STORY_DATA from './landing/storyData';
+import type { Volume as StoryVolume, Chapter as StoryChapter } from './landing/storyData';
 
 // ── Warm palette (matches Sidebar) ───────────────────────────────────────────
 const C = {
@@ -63,6 +65,7 @@ function compressImage(file: File): Promise<string> {
 export default function ChapterManager({ state, onClose, onActivate, onAdd, onUpdate, onDelete }: Props) {
   const [editing, setEditing] = useState<Chapter | null>(null);
   const [form, setForm] = useState<Omit<Chapter, 'id'>>(EMPTY_CHAPTER);
+  const [showImport, setShowImport] = useState(false);
   const bgInputRef = useRef<HTMLInputElement>(null);
 
   const chars = state.itemTypes.filter((t) => t.kind === 'image' && t.category === 'character');
@@ -106,6 +109,20 @@ export default function ChapterManager({ state, onClose, onActivate, onAdd, onUp
     e.target.value = '';
   }
 
+  function handleImportStoryChapter(vol: StoryVolume, ch: StoryChapter) {
+    const newChapter: Chapter = {
+      id: `ch-${crypto.randomUUID()}`,
+      name: ch.title.trim() || ch.subtitle,
+      description: [ch.subtitle, vol.blurb.split('\n')[0]].filter(Boolean).join('　'),
+      themeColor: vol.accent,
+      backgroundUrl: '',
+      allowedCharacters: [],
+      systemPromptModifier: '',
+    };
+    onAdd(newChapter);
+    setShowImport(false);
+  }
+
   const inputStyle: React.CSSProperties = {
     width: '100%', boxSizing: 'border-box',
     background: '#140e06', color: C.textPri,
@@ -146,6 +163,62 @@ export default function ChapterManager({ state, onClose, onActivate, onAdd, onUp
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
+
+          {/* ── Import picker ── */}
+          <AnimatePresence>
+            {showImport && (
+              <motion.div
+                key="import-picker"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.18 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                  <button onClick={() => setShowImport(false)} style={{
+                    background: 'none', border: `1px solid ${C.borderLt}`, color: C.textMuted,
+                    cursor: 'pointer', fontSize: 11, padding: '5px 10px', borderRadius: 4,
+                  }}>← 返回</button>
+                  <span style={{ fontSize: 12, color: C.textSec, letterSpacing: 0.6 }}>从物語导入篇章</span>
+                </div>
+                {STORY_DATA.map((vol) => (
+                  <div key={vol.id} style={{ marginBottom: 20 }}>
+                    <div style={{
+                      fontSize: 11, fontWeight: 700, letterSpacing: 1.2, marginBottom: 8,
+                      color: vol.accent, borderBottom: `1px solid ${C.borderLt}`, paddingBottom: 6,
+                    }}>
+                      {vol.indexCh} · {vol.title}
+                      <span style={{ color: C.textMuted, fontWeight: 400, marginLeft: 8 }}>{vol.titleEn}</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      {vol.chapters.map((ch) => (
+                        <div key={ch.id} style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '8px 12px', borderRadius: 5,
+                          background: C.sectionBg, border: `1px solid ${C.borderLt}`,
+                        }}>
+                          <div>
+                            <span style={{ fontSize: 12, color: C.textPri, marginRight: 8 }}>
+                              第{ch.num}章　{ch.title}
+                            </span>
+                            {ch.subtitle && (
+                              <span style={{ fontSize: 10, color: C.textMuted }}>{ch.subtitle}</span>
+                            )}
+                          </div>
+                          <button onClick={() => handleImportStoryChapter(vol, ch)} style={{
+                            background: `${vol.accent}18`, border: `1px solid ${vol.accent}66`,
+                            color: vol.accent, cursor: 'pointer', fontSize: 10,
+                            padding: '4px 10px', borderRadius: 4, whiteSpace: 'nowrap', flexShrink: 0,
+                          }}>导入</button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* ── Edit form ── */}
           <AnimatePresence>
             {editing && (
@@ -262,13 +335,13 @@ export default function ChapterManager({ state, onClose, onActivate, onAdd, onUp
           </AnimatePresence>
 
           {/* ── Chapter cards ── */}
-          {state.chapters.length === 0 && !editing && (
+          {!showImport && state.chapters.length === 0 && !editing && (
             <div style={{ fontSize: 12, color: C.textMuted, padding: '20px 0', textAlign: 'center' }}>
               还没有篇章，点击下方按钮创建第一个。
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: showImport ? 'none' : 'flex', flexDirection: 'column', gap: 10 }}>
             {state.chapters.map((ch) => {
               const isActive = ch.id === state.activeChapterId;
               const color = ch.themeColor ?? C.activeBdr;
@@ -377,28 +450,43 @@ export default function ChapterManager({ state, onClose, onActivate, onAdd, onUp
           background: `linear-gradient(to top, #281c0a, ${C.panelBg})`,
           borderRadius: '0 0 8px 8px',
         }}>
-          <button
-            onClick={openNew}
-            disabled={!!editing}
-            style={{
-              background: '#2e1e0c', border: `1px dashed ${C.border}`, color: C.textSec,
-              cursor: editing ? 'not-allowed' : 'pointer', fontSize: 12,
-              padding: '8px 18px', borderRadius: 5, opacity: editing ? 0.4 : 1,
-              transition: 'border-color 0.15s, color 0.15s',
-            }}
-            onMouseEnter={(e) => {
-              if (!editing) {
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={openNew}
+              disabled={!!editing || showImport}
+              style={{
+                background: '#2e1e0c', border: `1px dashed ${C.border}`, color: C.textSec,
+                cursor: (editing || showImport) ? 'not-allowed' : 'pointer', fontSize: 12,
+                padding: '8px 18px', borderRadius: 5, opacity: (editing || showImport) ? 0.4 : 1,
+                transition: 'border-color 0.15s, color 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                if (!editing && !showImport) {
+                  const b = e.currentTarget as HTMLButtonElement;
+                  b.style.borderColor = C.gold; b.style.color = C.gold;
+                }
+              }}
+              onMouseLeave={(e) => {
                 const b = e.currentTarget as HTMLButtonElement;
-                b.style.borderColor = C.gold; b.style.color = C.gold;
-              }
-            }}
-            onMouseLeave={(e) => {
-              const b = e.currentTarget as HTMLButtonElement;
-              b.style.borderColor = C.border; b.style.color = C.textSec;
-            }}
-          >
-            ＋ 新建篇章
-          </button>
+                b.style.borderColor = C.border; b.style.color = C.textSec;
+              }}
+            >
+              ＋ 新建篇章
+            </button>
+            <button
+              onClick={() => { setShowImport((v) => !v); setEditing(null); }}
+              style={{
+                background: showImport ? '#2e1e0c' : 'transparent',
+                border: `1px solid ${showImport ? C.gold : C.borderLt}`,
+                color: showImport ? C.gold : C.textMuted,
+                cursor: 'pointer', fontSize: 12,
+                padding: '8px 14px', borderRadius: 5,
+                transition: 'all 0.15s',
+              }}
+            >
+              ↓ 从物語导入
+            </button>
+          </div>
           <button onClick={onClose} style={{
             background: 'none', border: `1px solid ${C.borderLt}`, color: C.textMuted,
             cursor: 'pointer', fontSize: 12, padding: '8px 16px', borderRadius: 5,

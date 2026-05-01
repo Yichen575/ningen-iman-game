@@ -108,12 +108,14 @@ export default function LandingHeroA({ onPlay }: Props) {
             </div>
 
             <p className="serif" style={{
-              fontSize: 21, lineHeight: 1.55, color: 'var(--paper-dim)',
+              fontFamily: "'Times New Roman', Times, serif",
+              fontSize: 16, lineHeight: 1.55, color: 'var(--paper-dim)',
               maxWidth: 520, fontStyle: 'italic', marginBottom: 44,
             } as React.CSSProperties}>
-              A Chūnin is found dead in the Konoha archives with no wounds, no chakra trace,
-              and a cipher tattooed across his ribs. The investigation is yours — and the
-              village is not done burying its secrets.
+            
+              若能重新来过 <br />
+              你还会压上同等重量的筹码吗（笑） <br />
+               
             </p>
 
             <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
