@@ -114,7 +114,7 @@ export default function LandingHeroA({ onPlay }: Props) {
             } as React.CSSProperties}>
             
               若能重新来过 <br />
-              你还会压上同等重量的筹码吗（笑） <br />
+              你会再度选择同等重量的筹码吗（笑） <br />
                
             </p>
 

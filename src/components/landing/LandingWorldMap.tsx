@@ -3,38 +3,38 @@ import { useState } from 'react';
 type VillageKey = 'leaf' | 'sand' | 'mist' | 'rain' | 'end';
 
 const villages: Record<VillageKey, {
-  jp: string; romaji: string; en: string; chapter: string;
+  jp: string; romaji: string; en: string;
   color: string; x: number; y: number; desc: string; tags: string[];
 }> = {
   leaf: {
-    jp: '木ノ葉隠れ', romaji: 'Konohagakure', en: 'Hidden Leaf', chapter: 'CH. 01–04',
+    jp: '木ノ葉隠れ', romaji: 'Konohagakure', en: 'Hidden Leaf', 
     color: 'var(--leaf-glow)', x: 48, y: 58,
-    desc: "The case begins here. A shinobi is dead in the archives and the Hokage's office wants the story buried before dawn. Every rooftop, bathhouse, and ramen counter is a potential witness.",
-    tags: ['ARCHIVES', 'HOKAGE TOWER', 'ICHIRAKU', '24 NPCs'],
+    desc: "忍界驰名双标圣地。房价极高，且拥有“全村都在监控你，但出事谁也找不着”的奇妙治安。",
+    tags: ['GASLIGHTING ZONE', 'HOKAGE TOWER', 'ICHIRAKU', ' WILL OF FIRE'],
   },
   sand: {
-    jp: '砂隠れ', romaji: 'Sunagakure', en: 'Hidden Sand', chapter: 'CH. 05',
+    jp: '砂隠れ', romaji: 'Sunagakure', en: 'Hidden Sand', 
     color: '#e8c05a', x: 28, y: 72,
-    desc: 'A desert outpost, a Kazekage who owes your victim a favor, and a sandstorm that rewrites the cipher every night at moonrise.',
-    tags: ['DESERT', 'BAZAAR', 'CIPHER SHIFT'],
+    desc: '别问，问就是风沙拌饭。除了美瞳和超大功率吹风机（三星扇），这里连根绿化带都找不着。',
+    tags: ['DESERT', 'SAND IN EVERYTHING', 'WATER CRISIS'],
   },
   mist: {
-    jp: '霧隠れ', romaji: 'Kirigakure', en: 'Hidden Mist', chapter: 'CH. 06',
-    color: '#7cc4d9', x: 72, y: 28,
-    desc: "The village that stopped answering its mail. Expect fog so thick the sidescroller turns into silhouettes, and names you're not supposed to remember.",
-    tags: ['FOG', 'SEVEN BLADES', 'SILHOUETTE LVL'],
+    jp: '音隠れ', romaji: 'Otogakure', en: 'Hidden Sound', 
+    color: '#ff7920', x: 72, y: 28,
+    desc: "大蛇丸的科研后花园。这里的生物多样性全靠非法克隆，唯一的企业文化是『活得久就是胜利』。",
+    tags: ['ILLEGAL LABS', 'BODY SWAP SERVICE', 'CULT LEADER BASE'],
   },
   rain: {
-    jp: '雨隠れ', romaji: 'Amegakure', en: 'Hidden Rain', chapter: 'CH. 07',
+    jp: '灰の島', romaji: 'HAINOSHIMA', en: 'Land of Ashes', 
     color: '#9f7fb8', x: 58, y: 22,
-    desc: "The neon-soaked arcology where the cipher was forged. Rainfall never stops, chakra-conduit wires run under every street, and the Archivist's handler is waiting.",
-    tags: ['NEON', 'CYBERPUNK', 'ARCOLOGY'],
+    desc: "忍界顶级全包式监狱。阿伦诚意推荐：在这里，你不仅能享受长达四年的五感封印套餐，还能在无尽的偏头痛中思考“为什么给团藏打工不给买保险”。",
+    tags: ['PRISON', 'ZERO VISITOR', "NO WIFI",'POST GENOCIDE THERAPY'],
   },
   end: {
-    jp: '終末の谷', romaji: 'Shūmatsu no Tani', en: "Valley's End", chapter: 'CH. 08 · FINALE',
-    color: 'var(--orange)', x: 50, y: 48,
-    desc: "Where the rivers of all five nations used to meet. A cliff, a statue, and the answer to the last of the twenty-four kanji. You should come alone. You should come ready.",
-    tags: ['FINALE', 'BOSS PUZZLE', 'NO CHECKPOINT'],
+    jp: '南賀の川', romaji: 'Nakanokawa', en: "Naka River",
+    color: '#5f8fff', x: 50, y: 48,
+    desc: "宇智波指定投河/谈心/决裂景点。河水成分：40%水，60%宇智波的眼泪和中二魂。",
+    tags: ['UCHIHA MOMENTO', 'DRAMA ORIGIN', 'DROWNING RISK: HIGH','EMO BOYS MEETING POINT'],
   },
 };
 
@@ -183,7 +183,7 @@ export default function LandingWorldMap() {
             background: 'rgba(15,22,18,0.8)',
             clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px))',
           }}>
-            <div className="mono" style={{ fontSize: 10, letterSpacing: '0.3em', color: v.color, marginBottom: 10 }}>▚ {v.chapter} · DOSSIER</div>
+            <div className="mono" style={{ fontSize: 10, letterSpacing: '0.3em', color: v.color, marginBottom: 10 }}>▚ DOSSIER</div>
             <div className="jp" style={{ fontSize: 56, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 6 }}>{v.jp}</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, paddingBottom: 20, marginBottom: 20, borderBottom: '1px solid rgba(127,176,105,0.2)' }}>
               <span className="serif" style={{ fontSize: 22, fontStyle: 'italic', color: v.color }}>{v.romaji}</span>
