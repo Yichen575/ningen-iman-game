@@ -500,27 +500,36 @@ const STORY_DATA: Volume[] = [
     "blurb": "「如果我失去了一切记忆，一切你所熟悉的特征，那么我还是你所知的那个我吗？」\n\n再一次见面时，止水如此问我。\n我哑口无言。\n\n见我回答不上来，他露出了我以前从未见过的、狡黠的、疯狂的笑容，张开双臂：\n\n「……一个全新的我。」\n\n欢迎回到这个荒诞魔幻的世界，阿伦。\n\n",
     "accent": "#9f7fb8",
     "chapters": [
-      {
-        "id": "v3c1",
-        "num": "一",
-        "title": "汤面上的东西",
-        "subtitle": "What Floats on the Soup",
-        "date": "木ノ葉历 Y·28 · 春"
-      },
-      {
-        "id": "v3c2",
-        "num": "二",
-        "title": "新的火影",
-        "subtitle": "A New Hokage",
-        "date": "木ノ葉历 Y·28 · 夏"
-      },
-      {
-        "id": "v3c3",
-        "num": "三",
-        "title": "终末之谷",
-        "subtitle": "Valley's End",
-        "date": "木ノ葉历 Y·28 · 秋"
-      }
+      { "id": "v3c1",  "num": "一",     "title": "第一章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c2",  "num": "二",     "title": "第二章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c3",  "num": "三",     "title": "第三章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c4",  "num": "四",     "title": "第四章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c5",  "num": "五",     "title": "第五章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c6",  "num": "六",     "title": "第六章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c7",  "num": "七",     "title": "第七章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c8x", "num": "八-X",   "title": "第八章·外传", "subtitle": " ", "date": "——" },
+      { "id": "v3c8",  "num": "八",     "title": "第八章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c9",  "num": "九",     "title": "第九章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c10", "num": "十",     "title": "第十章",   "subtitle": " ", "date": "——" },
+      { "id": "v3c11", "num": "十一",   "title": "第十一章", "subtitle": " ", "date": "——" },
+      { "id": "v3c12", "num": "十二",   "title": "第十二章", "subtitle": " ", "date": "——" },
+      { "id": "v3c13", "num": "十三",   "title": "第十三章", "subtitle": " ", "date": "——" },
+      { "id": "v3c14", "num": "十四",   "title": "第十四章", "subtitle": " ", "date": "——" },
+      { "id": "v3c15", "num": "十五",   "title": "第十五章", "subtitle": " ", "date": "——" },
+      { "id": "v3c16", "num": "十六",   "title": "第十六章", "subtitle": " ", "date": "——" },
+      { "id": "v3c17", "num": "十七",   "title": "第十七章", "subtitle": " ", "date": "——" },
+      { "id": "v3c18", "num": "十八",   "title": "第十八章", "subtitle": " ", "date": "——" },
+      { "id": "v3c19", "num": "十九",   "title": "第十九章", "subtitle": " ", "date": "——" },
+      { "id": "v3c20", "num": "二十",   "title": "第二十章", "subtitle": " ", "date": "——" },
+      { "id": "v3c21", "num": "二十一", "title": "第二十一章", "subtitle": " ", "date": "——" },
+      { "id": "v3c22", "num": "二十二", "title": "第二十二章", "subtitle": " ", "date": "——" },
+      { "id": "v3c23", "num": "二十三", "title": "第二十三章", "subtitle": " ", "date": "——" },
+      { "id": "v3c24", "num": "二十四", "title": "第二十四章", "subtitle": " ", "date": "——" },
+      { "id": "v3c25", "num": "二十五", "title": "第二十五章", "subtitle": " ", "date": "——" },
+      { "id": "v3c26", "num": "二十六", "title": "第二十六章", "subtitle": " ", "date": "——" },
+      { "id": "v3c27", "num": "二十七", "title": "第二十七章", "subtitle": " ", "date": "——" },
+      { "id": "v3c28", "num": "二十八", "title": "第二十八章", "subtitle": " ", "date": "——" },
+      { "id": "v3c29", "num": "二十九", "title": "第二十九章", "subtitle": " ", "date": "——" }
     ]
   }
 ];
