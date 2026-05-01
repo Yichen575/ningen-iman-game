@@ -378,8 +378,127 @@ const STORY_DATA: Volume[] = [
         "id": "v2c43",
         "num": "四十二",
         "title": "第四十二章",
-        "subtitle": " ",
+        "subtitle": "",
         "date": "木ノ葉历 Y·28 · 12月"
+      },
+      {
+        "id": "v2c44",
+        "num": "四十三",
+        "title": "第四十三章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 1月"
+      },
+      {
+        "id": "v2c45",
+        "num": "四十四",
+        "title": "第四十四章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 1月"
+      },
+      {
+        "id": "v2c46",
+        "num": "四十五",
+        "title": "第四十五章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 2月"
+      },
+      {
+        "id": "v2c47",
+        "num": "四十六",
+        "title": "第四十六章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 2月"
+      },
+      {
+        "id": "v2c48",
+        "num": "四十七",
+        "title": "第四十七章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 3月"
+      },
+      {
+        "id": "v2c49",
+        "num": "四十八",
+        "title": "第四十八章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 3月"
+      },
+      {
+        "id": "v2c50",
+        "num": "四十九",
+        "title": "第四十九章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 4月"
+      },
+      {
+        "id": "v2c51",
+        "num": "五十",
+        "title": "第五十章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 4月"
+      },
+      {
+        "id": "v2c52",
+        "num": "五十一",
+        "title": "第五十一章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 5月"
+      },
+      {
+        "id": "v2c53",
+        "num": "五十二",
+        "title": "第五十二章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 5月"
+      },
+      {
+        "id": "v2c54",
+        "num": "五十三",
+        "title": "第五十三章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 6月"
+      },
+      {
+        "id": "v2c55",
+        "num": "五十四",
+        "title": "第五十四章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 6月"
+      },
+      {
+        "id": "v2c56",
+        "num": "五十五",
+        "title": "第五十五章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 7月"
+      },
+      {
+        "id": "v2c57",
+        "num": "五十六",
+        "title": "第五十六章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 7月"
+      },
+      {
+        "id": "v2c58",
+        "num": "五十七",
+        "title": "第五十七章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 8月"
+      },
+      {
+        "id": "v2c59",
+        "num": "五十八",
+        "title": "第五十八章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·29 · 8月"
+      },
+      {
+        "id": "v2c60",
+        "num": "五十九",
+        "title": "第五十九章",
+        "subtitle": "完结篇",
+        "date": "木ノ葉历 Y·29 · 9月"
       }
     ]
   },
