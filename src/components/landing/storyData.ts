@@ -32,41 +32,28 @@ const STORY_DATA: Volume[] = [
     "blurb": "隼人死的时候太年轻\n我没有办法怪任何人\n\n但他死得过早\n他给我的人生开了一个坏头\n我哭的时候会想起他\n笑的时候更会\n",
     "accent": "#ff6b1a",
     "chapters": [
-      {
-        "id": "v1c1",
-        "num": "一",
-        "title": "名字的重量",
-        "subtitle": "The Weight of a Name",
-        "date": "木ノ葉历 Y·19"
-      },
-      {
-        "id": "v1c2",
-        "num": "二",
-        "title": "再见",
-        "subtitle": "First Mission",
-        "date": "木ノ葉历 Y·19 · 夏"
-      },
-      {
-        "id": "v1c3",
-        "num": "三",
-        "title": "档案库的猫",
-        "subtitle": "The Archive Cat",
-        "date": "木ノ葉历 Y·20"
-      },
-      {
-        "id": "v1c4",
-        "num": "四",
-        "title": "出发前夜",
-        "subtitle": "On the Eve of Departure",
-        "date": "木ノ葉历 Y·21 · 春"
-      },
-      {
-        "id": "c1777581797299",
-        "num": "新",
-        "title": "新章节",
-        "subtitle": "New Chapter",
-        "date": "——"
-      }
+      { "id": "v1c1",          "num": "一",     "title": "开端",             "subtitle": " ", "date": "——" },
+      { "id": "v1c2",          "num": "二",     "title": "变化",             "subtitle": " ", "date": "——" },
+      { "id": "v1c3",          "num": "三",     "title": "相遇",             "subtitle": " ", "date": "——" },
+      { "id": "v1c4",          "num": "四",     "title": "哲学家阿伦",       "subtitle": " ", "date": "——" },
+      { "id": "c1777581797299","num": "五",     "title": "分别",             "subtitle": " ", "date": "——" },
+      { "id": "v1c6",          "num": "六",     "title": "爆头",             "subtitle": " ", "date": "——" },
+      { "id": "v1c7",          "num": "七",     "title": "银毛",             "subtitle": " ", "date": "——" },
+      { "id": "v1c8",          "num": "八",     "title": "古庙",             "subtitle": " ", "date": "——" },
+      { "id": "v1c9",          "num": "九",     "title": "大蛇丸",           "subtitle": " ", "date": "——" },
+      { "id": "v1c10",         "num": "十",     "title": "战斗",             "subtitle": " ", "date": "——" },
+      { "id": "v1c11",         "num": "十一",   "title": "不再放下",         "subtitle": " ", "date": "——" },
+      { "id": "v1c12",         "num": "十二",   "title": "空手接白刃",       "subtitle": " ", "date": "——" },
+      { "id": "v1c13",         "num": "十三",   "title": "哲学家隼人",       "subtitle": " ", "date": "——" },
+      { "id": "v1cex",         "num": "番外",   "title": "止水的番外之初遇", "subtitle": " ", "date": "——" },
+      { "id": "v1c14",         "num": "十四",   "title": "任务继续",         "subtitle": " ", "date": "——" },
+      { "id": "v1c15",         "num": "十五",   "title": "精神分裂",         "subtitle": " ", "date": "——" },
+      { "id": "v1c16",         "num": "十六",   "title": "第十六章",         "subtitle": " ", "date": "——" },
+      { "id": "v1c17",         "num": "十七",   "title": "疼痛和死亡",       "subtitle": " ", "date": "——" },
+      { "id": "v1c18",         "num": "十八",   "title": "妹妹",             "subtitle": " ", "date": "——" },
+      { "id": "v1c19",         "num": "十九",   "title": "女尸",             "subtitle": " ", "date": "——" },
+      { "id": "v1c20",         "num": "二十",   "title": "热症",             "subtitle": " ", "date": "——" },
+      { "id": "v1c21",         "num": "二十一", "title": "隼人之死",         "subtitle": " ", "date": "——" }
     ]
   },
   {
