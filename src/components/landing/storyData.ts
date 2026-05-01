@@ -303,6 +303,83 @@ const STORY_DATA: Volume[] = [
         "title": "第三十一章",
         "subtitle": " ",
         "date": "木ノ葉历 Y·28 · 7月"
+      },
+      {
+        "id": "v2c33",
+        "num": "三十二",
+        "title": "第三十二章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 7月"
+      },
+      {
+        "id": "v2c34",
+        "num": "三十三",
+        "title": "第三十三章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 8月"
+      },
+      {
+        "id": "v2c35",
+        "num": "三十四",
+        "title": "第三十四章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 8月"
+      },
+      {
+        "id": "v2c36",
+        "num": "三十五",
+        "title": "第三十五章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 9月"
+      },
+      {
+        "id": "v2c37",
+        "num": "三十六",
+        "title": "第三十六章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 9月"
+      },
+      {
+        "id": "v2c38",
+        "num": "三十七",
+        "title": "第三十七章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 10月"
+      },
+      {
+        "id": "v2c39",
+        "num": "三十八",
+        "title": "第三十八章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 10月"
+      },
+      {
+        "id": "v2c40",
+        "num": "三十九",
+        "title": "第三十九章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 11月"
+      },
+      {
+        "id": "v2c41",
+        "num": "四十",
+        "title": "第四十章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 11月"
+      },
+      {
+        "id": "v2c42",
+        "num": "四十一",
+        "title": "第四十一章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 12月"
+      },
+      {
+        "id": "v2c43",
+        "num": "四十二",
+        "title": "第四十二章",
+        "subtitle": " ",
+        "date": "木ノ葉历 Y·28 · 12月"
       }
     ]
   },
